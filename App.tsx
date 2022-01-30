@@ -1,20 +1,59 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
+import { useColorScheme, View, Text } from 'react-native';
+import {COLORS} from './constants/theme';
+import MainScreens from './navigations/MainScreens';
+import { useFonts } from 'expo-font';
 
-export default function App() {
+const App = () =>  {
+
+  const scheme = useColorScheme();
+
+  const [loaded] = useFonts({
+    'Lato-Thin': {
+      uri: require('./assets/fonts/Lato-Thin.ttf'),
+    },
+    'Lato-Light': {
+      uri: require('./assets/fonts/Lato-Light.ttf'),
+    },
+    'Lato-Regular': {
+      uri: require('./assets/fonts/Lato-Regular.ttf'),
+    },
+    'Lato-Bold': {
+      uri: require('./assets/fonts/Lato-Bold.ttf'),
+    },
+    'Lato-Black': {
+      uri: require('./assets/fonts/Lato-Black.ttf'),
+    }
+  })
+
+  const MyThemeLight = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: COLORS.backgroundLight,
+    },
+  };
+
+  const MyThemeDark = {
+    ...DarkTheme,
+    colors: {
+      ...DarkTheme.colors,
+        background: COLORS.backgroundDark,
+    }
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    loaded
+      ? <NavigationContainer theme={scheme == 'dark' ? MyThemeDark : MyThemeLight}>
+          <MainScreens />
+        </NavigationContainer>
+      : <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <Text>Ładowanie...</Text>
+        </View>
+    
+      
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
